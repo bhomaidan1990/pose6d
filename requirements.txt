@@ -1,0 +1,56 @@
+cython
+plyfile
+ujson  # make json loading in cocoapi_nvidia faster
+pycocotools
+ninja
+black
+docformatter
+setproctitle
+meshplex
+OpenEXR
+vispy>=0.6.4
+yacs>=0.1.8
+tabulate
+pytest-runner
+pytest
+ipdb
+tqdm
+numba
+mmcv-full
+imagecorruptions
+pyassimp==4.1.3  # 4.1.4 will cause egl_renderer SegmentFault
+pypng
+imgaug>=0.4.0
+albumentations
+transforms3d
+pyquaternion
+torchvision
+open3d
+fvcore
+tensorboardX
+einops
+timm==0.6.7
+glfw
+imageio
+imageio-ffmpeg
+PyOpenGL  # >=3.1.5
+PyOpenGL_accelerate
+chardet
+thop  # https://github.com/Lyken17/pytorch-OpCounter
+loguru
+pytorch-lightning==1.6.0.dev0  # tested for 1.6.0.dev0
+fairscale
+deepspeed
+# verified versions
+pyro-ppl==1.4.0 #for epro-pnp <1.8.1
+onnx
+onnxruntime
+onnx-simplifier
+# horovod #
+ref
+## Facebook research
+# pytorch3d # from source
+pytorch3d @ git+https://github.com/facebookresearch/pytorch3d@main
+# detectron2 # from source
+detectron2 @ git+https://github.com/facebookresearch/detectron2@main
+cffi==1.5.2 # sudo

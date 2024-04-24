@@ -1,0 +1,105 @@
+DATASETS:
+  TEST: [hb_test_primesense_bop19]
+  TRAIN: [hb_pbr_train]
+dataloader:
+  evaluator:
+  - {_target_: det.yolox.evaluators.YOLOX_COCOEvaluator, dataset_name: hb_test_primesense_bop19, filter_scene: false}
+  test:
+  - _target_: det.yolox.data.build_yolox_test_loader
+    dataset:
+      _target_: det.yolox.data.Base_DatasetFromList
+      img_size: ${test.test_size}
+      lst: {_target_: detectron2.data.get_detection_dataset_dicts, filter_empty: false, names: hb_test_primesense_bop19}
+      preproc: {_target_: det.yolox.data.ValTransform, legacy: false}
+      split: test
+    num_workers: 4
+    pin_memory: true
+    total_batch_size: 1
+  train:
+    _target_: det.yolox.data.build_yolox_train_loader
+    aug_wrapper:
+      AUG_HSV_PROB: 1.00000000
+      COLOR_AUG_CODE: Sequential([Sometimes(0.5, CoarseDropout( p=0.2, size_percent=0.05) ),Sometimes(0.4, GaussianBlur((0., 3.))),Sometimes(0.3, pillike.EnhanceSharpness(factor=(0., 50.))),Sometimes(0.3, pillike.EnhanceContrast(factor=(0.2, 50.))),Sometimes(0.5, pillike.EnhanceBrightness(factor=(0.1, 6.))),Sometimes(0.3, pillike.EnhanceColor(factor=(0., 20.))),Sometimes(0.5, Add((-25, 25), per_channel=0.3)),Sometimes(0.3, Invert(0.2, per_channel=True)),Sometimes(0.5, Multiply((0.6, 1.4), per_channel=0.5)),Sometimes(0.5, Multiply((0.6, 1.4))),Sometimes(0.1, AdditiveGaussianNoise(scale=10, per_channel=True)),Sometimes(0.5, iaa.contrast.LinearContrast((0.5, 2.2), per_channel=0.3)),], random_order=True)
+      COLOR_AUG_PROB: 0.80000000
+      COLOR_AUG_TYPE: code
+      FORMAT: RGB
+      HSV_H: 0.01500000
+      HSV_S: 0.70000000
+      HSV_V: 0.40000000
+      _target_: det.yolox.data.MosaicDetection
+      degrees: 10.00000000
+      enable_mixup: true
+      img_size: ${..dataset.img_size}
+      mixup_prob: 1.00000000
+      mixup_scale: [0.50000000, 1.50000000]
+      mosaic: true
+      mosaic_prob: 1.00000000
+      mosaic_scale: [0.10000000, 2]
+      preproc: {_target_: det.yolox.data.TrainTransform, max_labels: 120}
+      shear: 2.00000000
+      translate: 0.10000000
+    dataset:
+      _target_: det.yolox.data.Base_DatasetFromList
+      img_size: [640, 640]
+      lst:
+        _target_: detectron2.data.get_detection_dataset_dicts
+        names: [hb_pbr_train]
+      preproc: {_target_: det.yolox.data.TrainTransform, max_labels: 50}
+      split: train
+    num_workers: 4
+    pin_memory: true
+    total_batch_size: 32
+lr_config: {_target_: lib.torch_utils.solver.lr_scheduler.flat_and_anneal_lr_scheduler, anneal_method: cosine, target_lr_factor: 0.05000000, warmup_factor: 0.00000000, warmup_method: pow, warmup_pow: 2}
+model:
+  _target_: det.yolox.models.YOLOX
+  backbone:
+    _target_: det.yolox.models.YOLOPAFPN
+    depth: 1.33000000
+    in_channels: [256, 512, 1024]
+    width: 1.25000000
+  head: {_target_: det.yolox.models.YOLOXHead, in_channels: '${..backbone.in_channels}', num_classes: 33, width: '${..backbone.width}'}
+optimizer:
+  _target_: lib.torch_utils.solver.ranger.Ranger
+  lr: 0.00100000
+  params: {_target_: detectron2.solver.get_default_optimizer_params, weight_decay_bias: 0.00000000, weight_decay_norm: 0.00000000}
+  weight_decay: 0
+test:
+  amp_test: false
+  augment: true
+  conf_thr: 0.00100000
+  fuse_conv_bn: true
+  half_test: true
+  nms_thr: 0.65000000
+  num_classes: ${model.head.num_classes}
+  precise_bn: {enabled: false, num_iter: 200}
+  scales: [1, 0.75000000, 0.83000000, 1.12000000, 1.25000000]
+  test_dataset_names: [hb_test_primesense_bop19]
+  test_size: [640, 640]
+train:
+  amp: {enabled: true}
+  anneal_after_warmup: true
+  basic_lr_per_img: 0.00015625
+  checkpointer: {max_to_keep: 10, period: 2}
+  cudnn_benchmark: true
+  cudnn_deterministic: false
+  ddp: {broadcast_buffers: false, find_unused_parameters: false, fp16_compression: false}
+  device: cuda
+  ema: true
+  eval_period: -1
+  exp_name: yolox_x_640_augCozyAAEhsv_ranger_30_epochs_hb_pbr_hb_test_primesense_bop19
+  grad_clip: {clip_type: full_model, clip_value: 1.00000000, enabled: false, norm_type: 2.00000000}
+  init_checkpoint: output/yolox/bop_pbr/yolox_x_640_augCozyAAEhsv_ranger_30_epochs_hb_pbr_hb_test_primesense_bop19/model_final.pth
+  l1_from_scratch: false
+  log_period: 20
+  mscale: [0.80000000, 1.60000000]
+  no_aug_epochs: 15
+  occupy_gpu: false
+  output_dir: /home/aime/belal_ws/gdrnpp_bop2022/output/yolox/bop_pbr/yolox_x_640_augCozyAAEhsv_ranger_30_epochs_hb_pbr_hb_test_primesense_bop19
+  random_size: [14, 26]
+  resume_from: ''
+  seed: -1
+  sync_norm_period: 10
+  total_epochs: 1
+  use_l1: true
+  warmup_epochs: 5
+val: {eval_cached: false}
