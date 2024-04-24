@@ -1,6 +1,6 @@
 # 6D Pose Estimation
 
-This repo is refactored from the [gdrnpp_bop2022](https://github.com/shanice-l/gdrnpp_bop2022) to include the generic instance segmentation module only.
+This repo is refactored from the [gdrnpp_bop2022](https://github.com/shanice-l/gdrnpp_bop2022) to include the 6D pose estimation module only.
 
 
 ## Installation
