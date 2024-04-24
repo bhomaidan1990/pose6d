@@ -1,8 +1,7 @@
-# Instance Segmentation
+# 6D Pose Estimation
 
 This repo is refactored from the [gdrnpp_bop2022](https://github.com/shanice-l/gdrnpp_bop2022) to include the generic instance segmentation module only.
 
-This work combines [detectron2](https://github.com/facebookresearch/detectron2) with [Yolox](https://github.com/Megvii-BaseDetection/YOLOX) to do instance segmentation.
 
 ## Installation
 
